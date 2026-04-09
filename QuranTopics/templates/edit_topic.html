@@ -48,18 +48,18 @@
     <table id="ayat_table">
         {% for aya in topic.ayat_display %}
         <tr style="height: 30px">
-            <input name="sura_{{ forloop.counter }}" value="{{ aya.sura_number }}" type="hidden"/>       
-            <input name="sura_name_{{ forloop.counter }}" value="{{ aya.sura_name }}" type="hidden"/>       
-            <input name="aya_{{ forloop.counter }}" value="{{ aya.aya_number }}" type="hidden"/>
-            <input name="aya_content_{{ forloop.counter }}" value="{{ aya.aya_content }}" type="hidden"/>
-            <input name="aya_key_{{ forloop.counter }}" value="{{ aya.aya_key }}" type="hidden"/>
+            <input name="sura_{{ loop.index }}" value="{{ aya.sura_number }}" type="hidden"/>       
+            <input name="sura_name_{{ loop.index }}" value="{{ aya.sura_name }}" type="hidden"/>       
+            <input name="aya_{{ loop.index }}" value="{{ aya.aya_number }}" type="hidden"/>
+            <input name="aya_content_{{ loop.index }}" value="{{ aya.aya_content }}" type="hidden"/>
+            <input name="aya_key_{{ loop.index }}" value="{{ aya.aya_key }}" type="hidden"/>
             
             <td valign="top"> 
                 <img src="/left-arrow.png" hight="20px" width="20px" onclick="moveSelectedBefor(this)" title="غير ترتيب الآيات المختارة"/>
-                <input type="hidden" name="position_{{ forloop.counter }}" value="{{ forloop.counter }}"/>
+                <input type="hidden" name="position_{{ loop.index }}" value="{{ loop.index }}"/>
             </td>
-            <td> <input name="selected_{{ forloop.counter }}" type="checkbox" value="on"/> </td>       
-            <td valign="bottom"> {{ forloop.counter }}. </td>
+            <td> <input name="selected_{{ loop.index }}" type="checkbox" value="on"/> </td>       
+            <td valign="bottom"> {{ loop.index }}. </td>
             <td valign="bottom"> [{{ aya.sura_number }}:{{ aya.sura_name }}] </td>
             <td valign="bottom" style="padding-left: 10px; padding-right: 10px;"> ({{ aya.aya_number }}) </td>
             <td valign="bottom"> {{ aya.aya_content }} </td>

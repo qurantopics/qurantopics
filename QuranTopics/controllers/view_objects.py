@@ -7,9 +7,9 @@ class TopicAyaView():
     position = int
     selected = bool
     sura_number = int
-    sura_name = unicode
+    sura_name = str
     aya_number = int
-    aya_content = unicode
+    aya_content = str
     aya_key = str
 
 class TopicLine():
@@ -17,6 +17,4 @@ class TopicLine():
     sura_number = int
     sura_name = ""
     aya_number = int
-    aya_content = unicode
-    
-
+    aya_content = str

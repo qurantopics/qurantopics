@@ -3,36 +3,35 @@ import logging
 import os
 
 from google.appengine.api import users
-from google.appengine.ext import webapp
-from google.appengine.ext import db
-from google.appengine.ext.webapp.util import run_wsgi_app
-from controllers.entities import Sura, Topic
+from controllers.entities import Sura, Topic, Aya
 from controllers.page_controller import PageController
-
-
 
 
 class MainPage(PageController):
     def perform_get(self):
-        topics = Topic.all()
+        topics = Topic.query().fetch()
         self.template_values['topics'] = topics
         return 'index.html'
 
 
 class SurasListPage(PageController):
     def perform_get(self):
-        suras = Sura.gql("order by number").fetch(114)
+        suras = Sura.query().order(Sura.number).fetch(114)
         self.template_values['suras'] = suras
         return 'suras_list.html'
 
 
 class SurasDisplayPage(PageController):
     def perform_get(self):
+        # We mapped this view to '/display_sura/<path:path>'
+        # Flask gives it in kwargs as 'path', but PageController consumes self.request.path
         leading_length = len('/display_sura/')
         sura_number = int(self.request.path[leading_length:])
-        sura = Sura.gql("WHERE number = :number ", number = int(sura_number)).fetch(1)[0]
-        ayat = sura.aya_set
-        ayat.order('number')
+        sura = Sura.query(Sura.number == int(sura_number)).get()
+        if sura:
+            ayat = sura.aya_set.order(Aya.number).fetch(2000)
+        else:
+            ayat = []
 
         self.template_values['sura'] = sura
         self.template_values['ayat'] = ayat
@@ -46,29 +45,20 @@ class SearchTopics(PageController):
 
     def perform_post(self):
         search_for = self.request.get('search_for')
-        topics = Topic.all().search(search_for)
+        topics = []
+        if search_for:
+            words = search_for.lower().split()
+            query = Topic.query()
+            for word in words:
+                query = query.filter(Topic.search_words == word)
+            topics = query.fetch()
 
         self.template_values['topics'] = topics
         
         return 'search_results.html'
 
+
 class StaticPages(PageController):
     def perform_get(self):
         page_name = self.request.path[1:]
         return page_name + ".html"
-
-
-application = webapp.WSGIApplication(
-                                     [('/', MainPage),
-                                      ('/list_suras', SurasListPage),
-                                      ('/display_sura/.*', SurasDisplayPage),
-                                      ('/search', SearchTopics),
-                                      ('/.*', StaticPages)],
-                                     debug=True)
-
-def main():
-    logging.getLogger().setLevel(logging.DEBUG)
-    run_wsgi_app(application)
-
-if __name__ == "__main__":
-  main()

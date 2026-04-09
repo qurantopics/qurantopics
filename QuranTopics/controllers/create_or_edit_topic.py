@@ -1,8 +1,7 @@
 # coding: utf8
 
 import logging
-from google.appengine.ext.webapp import template
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 from controllers.view_objects import TopicEditView, TopicAyaView, TopicLine
 from controllers.entities import Sura, Aya, Topic
 from controllers.page_controller import PageController
@@ -14,6 +13,8 @@ class CreateOrEditTopic(PageController):
 
     def perform_get(self):
         self.require_login()
+        self.topic_edit_view = TopicEditView()
+        self.template_values['topic'] = self.topic_edit_view
         return 'edit_topic.html'
     
 
@@ -63,7 +64,7 @@ class CreateOrEditTopic(PageController):
                 topic = Topic()
                 topic.created_by = self.user
                 topic.put()
-                topic.topic_id = topic.key().id()
+                topic.topic_id = topic.key.id()
                 self.topic_edit_view.topic_id = topic.topic_id 
             topic.title = title
             ayat_keys = self.make_ayat_keys_from_ayat_display(self.topic_edit_view.ayat_display)
@@ -121,7 +122,7 @@ class CreateOrEditTopic(PageController):
             aya_display.sura_name = aya.sura.name
             aya_display.aya_number = aya.number
             aya_display.aya_content = aya.content
-            aya_display.aya_key = str(aya.key())
+            aya_display.aya_key = aya.key.urlsafe().decode('utf-8')
             ayat_display.append(aya_display)
         return ayat_display
 
@@ -129,7 +130,7 @@ class CreateOrEditTopic(PageController):
     def make_ayat_keys_from_ayat_display(self, ayat_display):
         ayat_keys = []
         for aya_display in ayat_display:
-            aya_key = db.Key(aya_display.aya_key)
+            aya_key = ndb.Key(urlsafe=aya_display.aya_key)
             ayat_keys.append(aya_key)
         return ayat_keys
             
@@ -143,7 +144,7 @@ class CreateOrEditTopic(PageController):
             if not self.list_contains_aya(topic_ayat, aya_display):
                 ayat_to_add.append(aya_display)
         
-        if position >= 1 and position <= len(topic_ayat):
+        if position is not None and position >= 1 and position <= len(topic_ayat):
             position = position - 1
             topic_ayat = topic_ayat[:position] + ayat_to_add + topic_ayat[position:]
         else:
