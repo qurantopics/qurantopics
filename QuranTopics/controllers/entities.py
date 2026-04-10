@@ -35,7 +35,7 @@ class Aya(ndb.Model):
     
     @property
     def sura(self):
-        if not hasattr(self, '_sura'):
+        if not getattr(self, '_sura', None):
             self._sura = self.sura_key.get()
         return self._sura
     
