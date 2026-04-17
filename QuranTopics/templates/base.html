@@ -9,58 +9,51 @@
         <meta name="Description" content="Create and share Quranic topics" />
         <meta name="verify-v1" content="PkGqCddHUaKd5FRR3hJGP5w7X1eC0d9ImWmT3LtOavw=" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <link rel="stylesheet/less" href="/stylesheets/styles.less">
-        <script src="/less-1.3.1.min.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         {% block script %} {% endblock %}
     </head>
   
     <body dir="rtl">
     
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-				<div class="container-fluid">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-	                <a class="brand" href="/">الرئيسية</a>
-                    <div class="nav-collapse collapse">
-	                    <ul class="nav">
-		                <li> <a href="/list_suras" > تصفح القرآن </a> </li>
-		                {% if user %}
-		                <li> <a href="/topics/add_edit" > أضف موضوعا </a> </li>
-		                {% endif %}
-		                <li> <a href="http://groups.google.com/group/qurantopics" target="_blank"> مجموعة الرسائل </a> </li>
-		                <li>
-		                    <a href="/about" > عن الموقع </a>
-		                 </li>
-	                </ul>
-	                <p class="navbar-text pull-left">
-	                    {{ user }}
-	                    <a href="{{ user_link }}" class="navbar-link">
-	                        {% if user %}
-	                        خروج
-	                        {% else %}
-	                         لإنشاء مواضيع جديدة سجل الدخول (بحساب جوجل) 
-	                        {% endif %}
-	                    </a>
-		            </p>
-
-		            <span class="divider-vertical pull-left"></span>
-                    <form class="navbar-search pull-left" action="/search" method="post">
-                        <input class="search-query" type="text" name="search_for" placeholder="بحث" />
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">الرئيسية</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"> <a class="nav-link" href="/list_suras"> تصفح القرآن </a> </li>
+                        {% if user %}
+                        <li class="nav-item"> <a class="nav-link" href="/topics/add_edit"> أضف موضوعا </a> </li>
+                        {% endif %}
+                        <li class="nav-item"> <a class="nav-link" href="http://groups.google.com/group/qurantopics" target="_blank"> مجموعة الرسائل </a> </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/about"> عن الموقع </a>
+                        </li>
+                    </ul>
+                    <span class="navbar-text me-3">
+                        {{ user }}
+                        <a href="{{ user_link }}" class="text-decoration-none">
+                            {% if user %}
+                            خروج
+                            {% else %}
+                            لإنشاء مواضيع جديدة سجل الدخول (بحساب جوجل) 
+                            {% endif %}
+                        </a>
+                    </span>
+                    <form class="d-flex" action="/search" method="post">
+                        <input class="form-control me-2" type="search" name="search_for" placeholder="بحث" />
                     </form>
-                    </div>
                 </div>            
             </div>
-        </div>
+        </nav>
 
-		<div class="container">
-			<div class="hero-unit">
-				<h1>مواضيع القرآن الكريم</h1>
-				<p>حرر وشارك نتائج بحثك في القرآن الكريم</p>
+		<div class="container mt-5 pt-4">
+			<div class="p-5 mb-4 bg-light rounded-3">
+				<h1 class="display-5 fw-bold">مواضيع القرآن الكريم</h1>
+				<p class="fs-4">حرر وشارك نتائج بحثك في القرآن الكريم</p>
 			</div>
 	
 			<hr>
@@ -71,9 +64,7 @@
 		</div>
 
 
-        <script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
-        <script src="/bootstrap/js/bootstrap-transition.js"></script>
-        <script src="/bootstrap/js/bootstrap-collapse.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
         <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

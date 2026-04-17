@@ -7,27 +7,7 @@ body {
 	padding-bottom: 60px;
 }
 
-.pull-left {
-	float: left !important;
-}
 
-/* RTL Navbar Alignments */
-.navbar .brand {
-    float: right;
-    margin-left: 20px;
-}
-
-.navbar .nav {
-    float: right;
-}
-
-.navbar .nav > li {
-    float: right;
-}
-
-ul.main-nav li, ul.nav.main-nav li {
-    float: right;
-}
 
 .sura_link, .sura_link a {
     color: navy;
@@ -86,79 +66,27 @@ ul.main-nav li, ul.nav.main-nav li {
     /* Less padding on the edges */
     body { padding-left: 10px; padding-right: 10px; }
     .quran_section { padding: 5px; }
-    .hero-unit { padding: 15px 10px !important; margin-bottom: 15px !important; }
-    .hero-unit h1 { font-size: 30px !important; line-height: 2 !important; }
-    .hero-unit p { font-size: 18px !important; line-height: 1.4 !important; }
+}
 
-    /* Force legacy Bootstrap 2 row-fluid components to stack cleanly */
-    .row-fluid .span2, .row-fluid .span8 {
-        width: 100%;
-        display: block;
-        margin-left: 0;
-    }
-    .topic_sura {
-        float: none !important;
-        display: inline-block;
-        margin-bottom: 5px;
-    }
-    
-    /* Touch-friendly immersive mobile navbar */
-    .navbar-inner {
-        padding: 0;
-    }
-    .navbar .btn-navbar {
-        float: left;
-        margin-left: 10px;
-        margin-top: 10px;
-    }
-    .navbar .brand {
-        float: none;
-        display: block;
-        text-align: center;
-        width: 100%;
-        padding: 15px 0;
-        margin: 0;
-        border-bottom: 1px solid #111;
-        font-size: 24px;
-        box-sizing: border-box;
-    }
-    .navbar .nav, .navbar .nav > li {
-        float: none;
-        display: block;
-        width: 100%;
-        margin: 0;
-    }
-    .navbar .nav > li {
-        border-bottom: 1px solid #222;
-    }
-    .navbar .nav > li > a {
-        display: block;
-        padding: 15px;
-        text-align: right;
-    }
-    .navbar .pull-left {
-        float: none !important;
-        text-align: right;
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-    }
-    .navbar-text {
-        margin: 0;
-        padding: 15px;
-        border-bottom: 1px solid #222;
-    }
-    .navbar-search {
-        padding: 15px;
-        margin: 0;
-    }
-    .navbar-search .search-query {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 10px;
-        border-radius: 20px;
-    }
-    .navbar .divider-vertical {
-        display: none;
-    }
+/* Ported from styles.less */
+.topic_sura {
+	text-decoration: none;
+	white-space: nowrap;
+	padding: 5px;
+	border-top-right-radius: 20px;
+	border-bottom-right-radius: 20px;
+	border-bottom-left-radius: 20px;
+	box-shadow: 2px 2px 3px 3px #ccc;
+}
+
+.topic_ayat {
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	border-bottom-right-radius: 20px;
+	box-shadow: 2px 2px 3px 3px #ccc;
+}
+
+.sura_section {
+	border-radius: 20px;
+	box-shadow: 2px 2px 3px 3px #ccc;
 }

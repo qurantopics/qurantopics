@@ -8,10 +8,10 @@
   فهرس السور
 </h2>
 
-<ul class="nav nav-pills nav-stacked">
+<ul class="nav flex-column nav-pills">
 {% for sura in suras %}
-	<li>
-		<a href="display_sura/{{ sura.number }}" >
+	<li class="nav-item">
+		<a class="nav-link" href="display_sura/{{ sura.number }}" >
 			{{ sura.number }}. 
 		    {{ sura.name }}
 			( {{ sura.number_of_ayat }}

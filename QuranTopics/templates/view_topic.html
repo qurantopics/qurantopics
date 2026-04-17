@@ -4,53 +4,46 @@
 
 {% block content %}
 
-<div style="float: right; width: 25%"> &nbsp; </div>
-<div style="float: right; width: 50%; text-align: center;">
+<div class="mb-4 text-center">
     <h2> {{ topic.title }} </h2>
-</div>
-<div style="float: left; width: 25%">
 
-{% if creating_user_or_admin %}
-    <table align="left">
-    <tr>
-    <td>
-        <form method="post" action="/topics/add_edit">
+    {% if creating_user_or_admin %}
+    <div class="mt-3">
+        <form method="post" action="/topics/add_edit" class="d-inline">
             <input name="topic_id" type="hidden" value="{{ topic.topic_id }}" />
-            <input class="btn" name="edit" type="submit" value="عدل الموضوع" >
+            <input class="btn btn-outline-primary btn-sm me-2" name="edit" type="submit" value="عدل الموضوع">
         </form>
-    </td>
-    <td>
-    <form method="post">
-        <input name="topic_id" type="hidden" value="{{ topic.topic_id }}" />
-        <input class="btn" name="delete" type="submit" value="احذف الموضوع" onclick="return confirm('هل أنت متأكد من رغبتك حذف الموضوع؟')">
-    </form>
-    </td>
-    </tr>
-    </table>
-{% endif %}
-</div>
-
-<div class="row-fluid quran_font">
-
-		<div class="row-fluid">
-			<div>
-{% for line in lines %}
-    {% if line.new_section %}
-    		</div>
-    	</div>
-    	<div class="row-fluid">
-            <div class="span2">
-	            <a href="/display_sura/{{ line.sura_number }}"
-	            	class="sura_link quran_text topic_sura"> 
-	                {{ line.sura_number }}.{{ line.sura_name }} 
-	            </a>
-            </div>
-            <div class="span8 quran_section quran_text topic_ayat">
+        <form method="post" class="d-inline">
+            <input name="topic_id" type="hidden" value="{{ topic.topic_id }}" />
+            <input class="btn btn-outline-danger btn-sm" name="delete" type="submit" value="احذف الموضوع"
+                onclick="return confirm('هل أنت متأكد من رغبتك حذف الموضوع؟')">
+        </form>
+    </div>
     {% endif %}
-        		{{ line.aya_content }}
-        		<a href="/display_sura/{{ line.sura_number }}#{{ line.aya_number }}" class="sura_link">﴿{{ line.aya_number }}﴾</a>
-{% endfor %}
-	</div>
 </div>
 
-{% endblock %}
+<div class="row quran_font">
+
+    <div class="row">
+        <div>
+            {% for line in lines %}
+            {% if line.new_section %}
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-2 text-start text-md-end mb-2 ps-0">
+            <a href="/display_sura/{{ line.sura_number }}"
+                class="sura_link quran_text topic_sura d-inline-block text-decoration-none pt-2 pb-2">
+                {{ line.sura_number }}.{{ line.sura_name }}
+            </a>
+        </div>
+        <div class="col-md-10 quran_section quran_text topic_ayat pt-2 pb-2">
+            {% endif %}
+            {{ line.aya_content }}
+            <a href="/display_sura/{{ line.sura_number }}#{{ line.aya_number }}" class="sura_link">﴿{{ line.aya_number
+                }}﴾</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% endblock %}

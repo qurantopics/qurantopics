@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block title %} إضافة أو تعديل موضوع {% endblock %}
 
@@ -13,35 +13,59 @@
 {% endif %}
 
 {% if topic.message %}
-    <div class="alert fade in"> &nbsp; {{ topic.message }} </div>
+    <div class="alert alert-info alert-dismissible fade show"> &nbsp; {{ topic.message }} </div>
     <br/>
 {% endif %}
 
-<form method="post" class="form-inline">
+<form method="post">
 
     {% if topic.topic_id %}
         <input name="topic_id" type="hidden" value="{{ topic.topic_id }}" />
     {% endif %}
     
-    <label> عنوان الموضوع * </label>
-    <input name="title" type="text" class="title-input" value="{{ topic.title }}" />
+    <div class="mb-3">
+        <label class="form-label"> عنوان الموضوع * </label>
+        <input name="title" type="text" class="form-control w-50" value="{{ topic.title }}" />
+    </div>
     
     <hr/>
-    <label> أضف آيات: </label>
-		  <label> رقم السورة *  </label>
-    <input name="sura" type="text" class="aya-input"/>
-		  <label> من آيه *  </label>
-    <input name="from_aya" type="text" class="aya-input" />
-		  <label> حتى آية  </label>
-    <input name="to_aya" type="text" class="aya-input" />
-    <label> ترتيب </label>
-    <input name="position" type="text" class="aya-input" />
-		  <input name="add" type="submit" value="أضف" class="btn">
+    <label class="form-label"> أضف آيات: </label>
+    <div class="row g-2 align-items-center mb-3">
+        <div class="col-auto">
+            <label class="col-form-label"> رقم السورة *  </label>
+        </div>
+        <div class="col-auto">
+            <input name="sura" type="text" class="form-control form-control-sm" style="width: 60px;"/>
+        </div>
+        <div class="col-auto">
+            <label class="col-form-label"> من آيه *  </label>
+        </div>
+        <div class="col-auto">
+            <input name="from_aya" type="text" class="form-control form-control-sm" style="width: 60px;" />
+        </div>
+        <div class="col-auto">
+            <label class="col-form-label"> حتى آية  </label>
+        </div>
+        <div class="col-auto">
+            <input name="to_aya" type="text" class="form-control form-control-sm" style="width: 60px;" />
+        </div>
+        <div class="col-auto">
+            <label class="col-form-label"> ترتيب </label>
+        </div>
+        <div class="col-auto">
+            <input name="position" type="text" class="form-control form-control-sm" style="width: 60px;" />
+        </div>
+        <div class="col-auto">
+            <input name="add" type="submit" value="أضف" class="btn btn-primary btn-sm">
+        </div>
+    </div>
     <hr/>             
     		  
-    <input name="remove" type="submit" value="احذف" class="btn" > |
-    <input name="move_to_position" type="submit" value="غير الترتيب إلى:" class="btn" >
-    <input name="to_position" type="text" class="aya-input" />
+    <div class="mb-3 d-flex align-items-center gap-2">
+        <input name="remove" type="submit" value="احذف" class="btn btn-danger btn-sm" > |
+        <input name="move_to_position" type="submit" value="غير الترتيب إلى:" class="btn btn-secondary btn-sm" >
+        <input name="to_position" type="text" class="form-control form-control-sm" style="width: 60px;" />
+    </div>
     
     <p/>		  
     
@@ -54,23 +78,23 @@
             <input name="aya_content_{{ loop.index }}" value="{{ aya.aya_content }}" type="hidden"/>
             <input name="aya_key_{{ loop.index }}" value="{{ aya.aya_key }}" type="hidden"/>
             
-            <td valign="top"> 
-                <img src="/left-arrow.png" hight="20px" width="20px" onclick="moveSelectedBefor(this)" title="غير ترتيب الآيات المختارة"/>
+            <td class="align-top"> 
+                <img src="/left-arrow.png" height="20px" width="20px" onclick="moveSelectedBefor(this)" title="غير ترتيب الآيات المختارة" style="cursor: pointer;" />
                 <input type="hidden" name="position_{{ loop.index }}" value="{{ loop.index }}"/>
             </td>
-            <td> <input name="selected_{{ loop.index }}" type="checkbox" value="on"/> </td>       
-            <td valign="bottom"> {{ loop.index }}. </td>
-            <td valign="bottom"> [{{ aya.sura_number }}:{{ aya.sura_name }}] </td>
-            <td valign="bottom" style="padding-left: 10px; padding-right: 10px;"> ({{ aya.aya_number }}) </td>
-            <td valign="bottom"> {{ aya.aya_content }} </td>
+            <td> <input name="selected_{{ loop.index }}" type="checkbox" value="on" class="form-check-input" /> </td>       
+            <td class="align-bottom"> {{ loop.index }}. </td>
+            <td class="align-bottom"> [{{ aya.sura_number }}:{{ aya.sura_name }}] </td>
+            <td class="align-bottom px-2"> ({{ aya.aya_number }}) </td>
+            <td class="align-bottom"> {{ aya.aya_content }} </td>
         </tr>
         {% endfor %}
     </table>
-    <img src="/down-left-arrow.png" hight="20px" width="20px" onclick="moveSelectedBefor(null)" title="غير ترتيب الآيات المختارة"/>
+    <img src="/down-left-arrow.png" height="20px" width="20px" onclick="moveSelectedBefor(null)" title="غير ترتيب الآيات المختارة" style="cursor: pointer;"/>
   
-    <div align="center">
+    <div class="text-center mt-4">
         <hr>
-        <input name="save" type="submit" value="احفظ الموضوع" class="btn" >
+        <input name="save" type="submit" value="احفظ الموضوع" class="btn btn-primary" >
     </div>
 </form>
 

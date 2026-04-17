@@ -4,9 +4,9 @@
 
 
 
-<ul class="nav nav-pills nav-stacked">
+<ul class="nav flex-column nav-pills">
 {% for topic in topics %}
-    <li> <a href="/topics/view/{{ topic.topic_id }}"> {{ topic.title }} </a> </li>
+    <li class="nav-item"> <a class="nav-link" href="/topics/view/{{ topic.topic_id }}"> {{ topic.title }} </a> </li>
 {% endfor %}
 </ul>
 
