@@ -15,7 +15,7 @@
 			{{ sura.number }}. 
 		    {{ sura.name }}
 			( {{ sura.number_of_ayat }}
-				{% if not sura.number_of_ayat  %}
+				{% if sura.number_of_ayat <= 10 %}
 												    		 آيات
 			    {% else %}
 															    آية
