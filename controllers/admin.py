@@ -4,7 +4,7 @@ import logging
 
 from flask.views import MethodView
 from flask import request
-from google.appengine.ext import ndb
+from google.cloud import ndb
 
 from controllers.entities import Sura, Aya, Topic
 from controllers.page_controller import PageController

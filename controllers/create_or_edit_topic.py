@@ -1,7 +1,7 @@
 # coding: utf8
 
 import logging
-from google.appengine.ext import ndb
+from google.cloud import ndb
 from controllers.view_objects import TopicEditView, TopicAyaView, TopicLine
 from controllers.entities import Sura, Aya, Topic
 from controllers.page_controller import PageController
