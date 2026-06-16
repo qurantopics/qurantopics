@@ -19,6 +19,10 @@ google = oauth.register(
 
 @auth_bp.route('/login')
 def login():
+    if getattr(oauth, 'app', None) is None:
+        from flask import current_app
+        oauth.init_app(current_app._get_current_object())
+
     continue_url = request.args.get('continue', '/')
     session['continue_url'] = continue_url
     
@@ -33,6 +37,10 @@ def login():
 
 @auth_bp.route('/auth/callback')
 def auth_callback():
+    if getattr(oauth, 'app', None) is None:
+        from flask import current_app
+        oauth.init_app(current_app._get_current_object())
+
     try:
         token = google.authorize_access_token()
         user_info = token.get('userinfo')

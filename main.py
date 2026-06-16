@@ -40,8 +40,9 @@ from controllers.admin import RemoveSura, ReputSura, EditAya
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.environ.get('SECRET_KEY', 'default-dev-secret-key')
 
-from controllers.auth_controller import auth_bp
+from controllers.auth_controller import auth_bp, oauth
 app.register_blueprint(auth_bp)
+oauth.init_app(app)
 
 
 
