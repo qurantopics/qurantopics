@@ -75,3 +75,12 @@ class Topic(ndb.Model):
         return ndb.get_multi(self.ayat_keys)
 
 
+class AppAdmin(ndb.Model):
+    email = ndb.StringProperty()
+
+    @staticmethod
+    def is_admin(email):
+        if not email:
+            return False
+        admin = AppAdmin.query(AppAdmin.email == email).get()
+        return admin is not None

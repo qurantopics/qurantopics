@@ -2,7 +2,6 @@ import cgi
 import logging
 import os
 
-from google.appengine.api import users
 from controllers.entities import Sura, Topic, Aya
 from controllers.page_controller import PageController
 

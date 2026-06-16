@@ -1,19 +1,33 @@
 import os
 import logging
 
-# Initialize local stubs for bundled services if running locally
-# This MUST happen before other App Engine-related imports
+import json
+from google.cloud import secretmanager
+
+def load_secrets_from_vault():
+    if os.getenv('GAE_ENV') == 'standard':
+        try:
+            client = secretmanager.SecretManagerServiceClient()
+            project_id = os.environ.get('GOOGLE_CLOUD_PROJECT', 'qurantopics')
+            name = f"projects/{project_id}/secrets/QURANTOPICS_SECRETS/versions/latest"
+            
+            response = client.access_secret_version(request={"name": name})
+            payload = response.payload.data.decode("UTF-8")
+            secrets = json.loads(payload)
+            
+            os.environ['GOOGLE_CLIENT_ID'] = secrets.get('GOOGLE_CLIENT_ID', '')
+            os.environ['GOOGLE_CLIENT_SECRET'] = secrets.get('GOOGLE_CLIENT_SECRET', '')
+            os.environ['SECRET_KEY'] = secrets.get('SECRET_KEY', 'default-prod-secret')
+        except Exception as e:
+            logging.error(f"Failed to load secrets from Secret Manager: {e}")
+
+load_secrets_from_vault()
+
 if os.getenv('GAE_ENV') != 'standard':
-    from google.appengine.api import apiproxy_stub_map, user_service_stub
-    apiproxy_stub_map.apiproxy = apiproxy_stub_map.APIProxyStubMap()
-    apiproxy_stub_map.apiproxy.RegisterStub(
-        'user', 
-        user_service_stub.UserServiceStub(login_url='/login?continue=%s')
-    )
     os.environ['APPLICATION_ID'] = 'dev~qurantopics'
 
+
 from flask import Flask, send_from_directory, abort, request, redirect, make_response
-from google.appengine.api import wrap_wsgi_app
 from google.cloud import ndb as cloud_ndb
 
 # Import our routes
@@ -24,17 +38,13 @@ from controllers.admin import RemoveSura, ReputSura, EditAya
 
 # Create Flask app
 app = Flask(__name__, static_folder='static')
+app.secret_key = os.environ.get('SECRET_KEY', 'default-dev-secret-key')
 
-# Local Login Route for development
-if os.getenv('GAE_ENV') != 'standard':
-    @app.route('/login')
-    def login_page():
-        continue_url = request.args.get('continue', '/')
-        email = request.args.get('email', 'admin@example.com')
-        resp = make_response(redirect(continue_url))
-        # Set a cookie that our middleware will use to 'log in' the user
-        resp.set_cookie('dev_user', email)
-        return resp
+from controllers.auth_controller import auth_bp
+app.register_blueprint(auth_bp)
+
+
+
 
 # Add routes to serve legacy static folders
 @app.route('/stylesheets/<path:filename>')
@@ -60,27 +70,12 @@ ndb_client = cloud_ndb.Client()
 
 def ndb_wsgi_middleware(wsgi_app):
     def middleware(environ, start_response):
-        # Local development user mocking
-        if os.getenv('GAE_ENV') != 'standard':
-            # Check for our dev_user cookie
-            cookie_header = environ.get('HTTP_COOKIE', '')
-            if 'dev_user=' in cookie_header:
-                import re
-                match = re.search(r'dev_user=([^;]+)', cookie_header)
-                if match:
-                    email = match.group(1)
-                    # Set the environment variables that App Engine Users API expects
-                    environ['USER_EMAIL'] = email
-                    environ['USER_ID'] = '12345'
-                    environ['USER_IS_ADMIN'] = '1' if 'admin' in email else '0'
-                    environ['AUTH_DOMAIN'] = 'gmail.com'
-
         with ndb_client.context():
             return wsgi_app(environ, start_response)
     return middleware
 
-# Wrap WSGI app for App Engine Bundled Services (Users API) and Cloud NDB
-app.wsgi_app = ndb_wsgi_middleware(wrap_wsgi_app(app.wsgi_app))
+# Wrap WSGI app for Cloud NDB
+app.wsgi_app = ndb_wsgi_middleware(app.wsgi_app)
 
 # Main mapping routes
 app.add_url_rule('/', view_func=MainPage.as_view('main_page'))

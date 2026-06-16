@@ -2,10 +2,11 @@ import os
 import logging
 import traceback
 import sys
-from flask import request, redirect, render_template
+from flask import request, redirect, render_template, session, url_for
 from flask.views import MethodView
-from google.appengine.api import users
+from google.cloud.ndb import User
 from controllers.exceptions import *
+from controllers.entities import AppAdmin
 
 class PageController(MethodView):
     
@@ -38,7 +39,7 @@ class PageController(MethodView):
         except Exception as exception:
             logging.error("Application error: " + str(type(exception)) + ": " + str(exception))
             traceback.print_exc()
-            if users.is_current_user_admin():
+            if self.user and AppAdmin.is_admin(self.user.email()):
                 return "<br>".join(traceback.format_exc().splitlines())
             else:
                 return redirect("/")
@@ -57,19 +58,20 @@ class PageController(MethodView):
         except Exception as exception:
             logging.error("Application error: " + str(type(exception)) + ": " + str(exception))
             traceback.print_exc()
-            if users.is_current_user_admin():
+            if self.user and AppAdmin.is_admin(self.user.email()):
                 return "<br>".join(traceback.format_exc().splitlines())
             else:
                 return redirect("/")
                 
     def set_user(self):
-        user = users.get_current_user()
-        if user:
-            self.user = user
-            self.template_values['user'] = user.nickname()
-            user_link = users.create_logout_url('/')
+        email = session.get('user_email')
+        if email:
+            self.user = User(email=email, _auth_domain='gmail.com')
+            self.template_values['user'] = email.split('@')[0]
+            user_link = url_for('auth.logout')
         else:
-            user_link = users.create_login_url(request.url)
+            self.user = None
+            user_link = url_for('auth.login', **{'continue': request.url})
 
         self.template_values['user_link'] = user_link
             
@@ -78,7 +80,7 @@ class PageController(MethodView):
     
     def require_login(self):
         if not self.user:
-            self.redirect(users.create_login_url(request.url))
+            self.redirect(url_for('auth.login', **{'continue': request.url}))
             raise NoUserLoggedIn()
     
     def require_user(self, user):
@@ -87,7 +89,10 @@ class PageController(MethodView):
             raise UserNotPermittedToPerformOperation(self.user.email() if self.user else 'Anonymous')
                          
     def is_logged_in_user_or_admin(self, user):
-        return users.is_current_user_admin() or self.user == user
+        is_admin = False
+        if self.user:
+            is_admin = AppAdmin.is_admin(self.user.email())
+        return is_admin or self.user == user
     
     class WebRequestMock:
         def get(self, name):
