@@ -59,5 +59,5 @@ class SearchTopics(PageController):
 
 class StaticPages(PageController):
     def perform_get(self):
-        page_name = self.request.path[1:]
+        page_name = self.request.path.strip('/')
         return page_name + ".html"

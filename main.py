@@ -32,7 +32,7 @@ from flask import Flask, send_from_directory, abort, request, redirect, make_res
 from google.cloud import ndb as cloud_ndb
 
 # Import our routes
-from controllers.qurantopics import MainPage, SurasListPage, SurasDisplayPage, SearchTopics
+from controllers.qurantopics import MainPage, SurasListPage, SurasDisplayPage, SearchTopics, StaticPages
 from controllers.create_or_edit_topic import CreateOrEditTopic
 from controllers.view_topic import ViewTopic
 from controllers.admin import RemoveSura, ReputSura, EditAya
@@ -86,6 +86,7 @@ app.add_url_rule('/', view_func=MainPage.as_view('main_page'))
 app.add_url_rule('/list_suras', view_func=SurasListPage.as_view('suras_list'))
 app.add_url_rule('/display_sura/<path:path>', view_func=SurasDisplayPage.as_view('suras_display'))
 app.add_url_rule('/search', view_func=SearchTopics.as_view('search'))
+app.add_url_rule('/about', view_func=StaticPages.as_view('about_page'))
 
 # Topics
 app.add_url_rule('/topics/add_edit', view_func=CreateOrEditTopic.as_view('create_edit_topic'))

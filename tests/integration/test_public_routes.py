@@ -69,3 +69,11 @@ def test_search_get_redirects_to_home(client):
     resp = client.get('/search')
     assert resp.status_code in (301, 302)
     assert resp.headers.get('Location') == '/'
+
+
+def test_about_page(client):
+    resp = client.get('/about')
+    assert resp.status_code == 200
+    html = resp.data.decode('utf-8')
+    assert "مرحبا بكم في موقع مواضيع القرآن الكريم" in html
+    assert "عن الموقع" in html

@@ -47,6 +47,7 @@ class SmokeTestRunner:
 
         try:
             self.test_public_home()
+            self.test_public_about()
             self.test_public_suras_list()
             self.test_public_sura_display()
             self.test_anonymous_cannot_create_topic()
@@ -75,6 +76,13 @@ class SmokeTestRunner:
             self.log("Public Home", f"GET / responded 200 OK")
         else:
             self.log("Public Home", f"GET / failed with status {resp.status_code}", success=False)
+
+    def test_public_about(self):
+        resp = self.session.get(self.url("/about"))
+        if resp.status_code == 200 and ("مواضيع القرآن الكريم" in resp.text or "عن الموقع" in resp.text):
+            self.log("About Page", "GET /about responded 200 OK")
+        else:
+            self.log("About Page", f"GET /about failed (status {resp.status_code})", success=False)
 
     def test_public_suras_list(self):
         resp = self.session.get(self.url("/list_suras"))
