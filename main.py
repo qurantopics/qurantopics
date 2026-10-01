@@ -25,6 +25,7 @@ load_secrets_from_vault()
 
 if os.getenv('GAE_ENV') != 'standard':
     os.environ['APPLICATION_ID'] = 'dev~qurantopics'
+    os.environ.setdefault('GOOGLE_CLOUD_PROJECT', 'qurantopics')
 
 
 from flask import Flask, send_from_directory, abort, request, redirect, make_response
@@ -71,6 +72,8 @@ ndb_client = cloud_ndb.Client()
 
 def ndb_wsgi_middleware(wsgi_app):
     def middleware(environ, start_response):
+        if cloud_ndb.get_context(False) is not None:
+            return wsgi_app(environ, start_response)
         with ndb_client.context():
             return wsgi_app(environ, start_response)
     return middleware

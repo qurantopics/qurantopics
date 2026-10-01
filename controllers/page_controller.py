@@ -87,6 +87,12 @@ class PageController(MethodView):
         if not self.is_logged_in_user_or_admin(user):
             self.redirect('/')
             raise UserNotPermittedToPerformOperation(self.user.email() if self.user else 'Anonymous')
+
+    def require_admin(self):
+        self.require_login()
+        if not AppAdmin.is_admin(self.user.email()):
+            self.redirect('/')
+            raise UserNotPermittedToPerformOperation(self.user.email())
                          
     def is_logged_in_user_or_admin(self, user):
         is_admin = False

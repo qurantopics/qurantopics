@@ -3,14 +3,22 @@
 import logging
 
 from flask.views import MethodView
-from flask import request
+from flask import request, session, redirect
 from google.cloud import ndb
 
-from controllers.entities import Sura, Aya, Topic
+from controllers.entities import Sura, Aya, Topic, AppAdmin
 from controllers.page_controller import PageController
 
 
-class RemoveSura(MethodView):
+class AdminMethodView(MethodView):
+    def dispatch_request(self, *args, **kwargs):
+        email = session.get('user_email')
+        if not email or not AppAdmin.is_admin(email):
+            return redirect('/')
+        return super().dispatch_request(*args, **kwargs)
+
+
+class RemoveSura(AdminMethodView):
 
     def get(self):
         sura_number = int(request.values.get('sura'))
@@ -20,7 +28,7 @@ class RemoveSura(MethodView):
         return "OK"
 
 
-class ReputSura(MethodView):
+class ReputSura(AdminMethodView):
 
     def get(self):
         sura_number = int(request.values.get('sura'))
@@ -35,6 +43,7 @@ class ReputSura(MethodView):
 class EditAya(PageController):
 
     def perform_get(self):
+        self.require_admin()
         sura_number = int(self.request.get('sura'))
         aya_number = int(self.request.get('aya'))
         
@@ -64,6 +73,7 @@ class EditAya(PageController):
     
         
     def perform_post(self):
+        self.require_admin()
         if (self.request.get('edit')):
             aya_key = self.request.get('aya_key')
             aya = ndb.Key(urlsafe=aya_key).get()
