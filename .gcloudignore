@@ -30,6 +30,14 @@ __pycache__/
 .vscode/
 .idea/
 
+# Ignore test artifacts and scripts
+tests/
+scripts/
+.pytest_cache/
+*.log
+firebase-export-*/
+requirements-dev.txt
+
 # Ignore OS specific files
 .DS_Store
 Thumbs.db
